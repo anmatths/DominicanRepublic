@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Next Available Invoice Number</title>
+    <link rel="stylesheet" href="styles/form.css" />
+</head>
+
+<body>
+    <form id="invoiceForm">
+        <h2>Find Next Available Invoice in Dominican Republic</h2>
+        <label for="lastInvoice">Invoice start number:</label>
+        <input type="text" id="lastInvoice" placeholder="E310008000001" required value="E310008000001" />
+
+        <label for="searchRange">Invoice to check (quantity):</label>
+        <input type="number" id="searchRange" required value="10" min="1" />
+
+        <button type="submit">Search</button>
+        <div id="resultBox">Waiting for results...</div>
+    </form>
+
+    <script>
+        document.getElementById('invoiceForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const resultBox = document.getElementById("resultBox");
+            resultBox.innerText = "Waiting for results...";
+
+            const lastInvoice = document.getElementById('lastInvoice').value;
+            const searchRange = parseInt(document.getElementById('searchRange').value, 10);
+
+            try {
+                const response = await fetch("https://dominicana.tempusorione.workers.dev", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ lastInvoice, searchRange })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    resultBox.innerText = `Error: ${data.error || "Unknown error occurred."}`;
+                } else {
+                    resultBox.innerText = `Invoice: ${data.invoice || "Not found"}\nMessage: ${data.message}`;
+                }
+            } catch (err) {
+                resultBox.innerText = "An error occurred while processing the response.";
+            }
+        });
+    </script>
+</body>
+
+</html>
