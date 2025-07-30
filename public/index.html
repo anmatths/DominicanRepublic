@@ -19,8 +19,8 @@
       <label for="password">Password:</label>
       <input type="password" id="password" required />
 
-      <label for="rncid">RNC:</label>
-      <input type="text" id="rncid" required />
+      <label for="rnc">RNC:</label>
+      <input type="text" id="rnc" required />
 
       <label for="lastInvoice">Start Compliance Number (PAC sequence):</label>
       <input type="text" id="lastInvoice" list="invoiceOptions" required placeholder="e.g. E310008000001" />
@@ -57,9 +57,9 @@
       const resultBox = document.getElementById("resultBox");
       resultBox.innerText = "Waiting for results...";
 
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const rncid = document.getElementById('rncid').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const rnc = document.getElementById('rnc').value;
       const lastInvoice = document.getElementById('lastInvoice').value;
       const searchRange = parseInt(document.getElementById('searchRange').value, 10);
 
@@ -69,7 +69,7 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ user, pass, rncid, lastInvoice, searchRange })
+          body: JSON.stringify({ username, password, rnc, lastInvoice, searchRange })
         });
 
         const data = await response.json();
