@@ -1,8 +1,3 @@
-interface Env {
-  USERNAME: string;
-  PASSWORD: string;
-}
-
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const ALLOWED_ORIGINS = [
@@ -36,11 +31,10 @@ export default {
         typeof body.lastInvoice === "string" && body.lastInvoice.trim().length > 0
           ? body.lastInvoice
           : "E310008000001";
-      const searchRange = body.searchRange ?? 50;
-
-      const rnc = "131980899";
-      const username = env.USERNAME;
-      const password = env.PASSWORD;
+      const searchRange = body.searchRange ?? 10;
+      const rnc = body.rnc; //"131980899";
+      const username = body.username;
+      const password = body.password;
 
       const credentials = btoa(`${username}:${password}`);
       const tokenRes = await fetch("https://labdo.guru-soft.com/Empresarial/1.0/Autenticacion/Api/ServicioEDOC?Id=3#", {
