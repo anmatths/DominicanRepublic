@@ -9,49 +9,81 @@
 </head>
 
 <body>
+  <div class="form-wrapper">
     <form id="invoiceForm">
-        <h2>Find Next Available Invoice in Dominican Republic</h2>
-        <label for="lastInvoice">Invoice start number:</label>
-        <input type="text" id="lastInvoice" placeholder="E310008000001" required value="E310008000001" />
+      <h2>Find Next Available Invoice in Dominican Republic</h2>
 
-        <label for="searchRange">Invoice to check (quantity):</label>
-        <input type="number" id="searchRange" required value="10" min="1" />
+      <label for="username">Username:</label>
+      <input type="text" id="username" required />
 
-        <button type="submit">Search</button>
-        <div id="resultBox">Waiting for results...</div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required />
+
+      <label for="rncid">RNC:</label>
+      <input type="text" id="rncid" required />
+
+      <label for="lastInvoice">Start Compliance Number (PAC sequence):</label>
+      <input type="text" id="lastInvoice" list="invoiceOptions" required placeholder="e.g. E310008000001" />
+      <datalist id="invoiceOptions">
+        <option value="E310008000001">
+        <option value="E320008000001">
+        <option value="E330008000001">
+        <option value="E340008000001">
+        <option value="E440008000001">
+        <option value="E450008000001">
+      </datalist>
+
+      <label for="searchRange">Number of sequences to check :</label>
+      <input type="number" id="searchRange" required placeholder="e.g. 20" min="1" />
+
+      <button type="submit">Query PAC API</button>
+      <div id="resultBox"></div>
     </form>
 
-    <script>
-        document.getElementById('invoiceForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+    <div class="form-header">
+      <p>
+        This tool queries the official PAC API of the Dominican Republic to retrieve the next available compliance
+        number
+        for each document type. Use this information to correctly set the Next Number field in the corresponding
+        Compliance Invoice Book in CargoWise before issuing electronic transactions.
+      </p>
+    </div>
+  </div>
 
-            const resultBox = document.getElementById("resultBox");
-            resultBox.innerText = "Waiting for results...";
+  <script>
+    document.getElementById('invoiceForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-            const lastInvoice = document.getElementById('lastInvoice').value;
-            const searchRange = parseInt(document.getElementById('searchRange').value, 10);
+      const resultBox = document.getElementById("resultBox");
+      resultBox.innerText = "Waiting for results...";
 
-            try {
-                const response = await fetch("https://dominicana.tempusorione.workers.dev", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ lastInvoice, searchRange })
-                });
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const rncid = document.getElementById('rncid').value;
+      const lastInvoice = document.getElementById('lastInvoice').value;
+      const searchRange = parseInt(document.getElementById('searchRange').value, 10);
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    resultBox.innerText = `Error: ${data.error || "Unknown error occurred."}`;
-                } else {
-                    resultBox.innerText = `Invoice: ${data.invoice || "Not found"}\nMessage: ${data.message}`;
-                }
-            } catch (err) {
-                resultBox.innerText = "An error occurred while processing the response.";
-            }
+      try {
+        const response = await fetch("https://dominicana.tempusorione.workers.dev", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ user, pass, rncid, lastInvoice, searchRange })
         });
-    </script>
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          resultBox.innerText = `Error: ${data.error || "Unknown error occurred."}`;
+        } else {
+          resultBox.innerText = `Compliance Number: ${data.invoice || "No Available"}\Status: ${data.message}`;
+        }
+      } catch (err) {
+        resultBox.innerText = "An error occurred while processing the response.";
+      }
+    });
+  </script>
 </body>
 
 </html>
