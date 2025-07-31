@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Find Next Available Invoice Number</title>
-    <link rel="stylesheet" href="styles/form.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Next Available Invoice Number</title>
+  <link rel="stylesheet" href="styles/form.css" />
 </head>
 
 <body>
@@ -77,7 +77,7 @@
         if (!response.ok) {
           resultBox.innerText = `Error: ${data.error || "Unknown error occurred."}`;
         } else {
-          resultBox.innerText = `Compliance Number: ${data.invoice || "No Available"}\Status: ${data.message}`;
+          resultBox.innerText = `Compliance Number: ${data.invoice || "Not Found"}\nStatus: ${data.message}`;
         }
       } catch (err) {
         resultBox.innerText = "An error occurred while processing the response.";

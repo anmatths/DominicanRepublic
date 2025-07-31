@@ -32,7 +32,7 @@ export default {
           ? body.lastInvoice
           : "E310008000001";
       const searchRange = body.searchRange ?? 10;
-      const rnc = body.rnc; //"131980899";
+      const rnc = body.rnc;;
       const username = body.username;
       const password = body.password;
 
@@ -45,7 +45,7 @@ export default {
       });
 
       if (!tokenRes.ok) {
-        return new Response(JSON.stringify({ error: "Failed to obtain token" }), {
+        return new Response(JSON.stringify({ error: "Failed to obtain token, username/password/rnc not valid" }), {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
@@ -80,7 +80,7 @@ export default {
         if (invoiceRes.status === 400 && json?.MensajeRespuesta === "Documento no encontrado.") {
           return new Response(
             JSON.stringify({
-              message: "Available invoice found",
+              message: "Available",
               invoice: invoiceNumber,
               details: json
             }),
@@ -92,7 +92,7 @@ export default {
       }
 
       return new Response(
-        JSON.stringify({ message: "No available invoice found", invoice: null }),
+        JSON.stringify({ message: "No available", invoice: null }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         }
